@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sample_ai
+    ports:
+      - 5432:5432
+
+  app:
+    image: python:3.10-slim
+    restart: always
+    depends_on:
+      - db
+    command: start.sh
+
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/sample_ai
+
